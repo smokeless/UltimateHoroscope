@@ -14,9 +14,12 @@ url = 'https://www.freewillastrology.com/horoscopes/horo-archive.html'
 r = requests.get(url)
 soup = BeautifulSoup(r.text,'html.parser')
 file = 'allTheThings'
-for link in soup.find_all('a', href=True):
-    print(url+'/'+link['href'])
+rawLinkArray = []
 
-    #with open(file, 'w') as myFile:
-    #    myFile.write(req.text)
-    #print(link['href'])
+for link in soup.find_all('a', href=True):
+    if '..' in link['href'] or 'email' in link['href'] or 'p' not in link['href']:
+        pass
+    else:
+        rawLinkArray.append(url + '/' + link['href'])
+
+#before we loop through all this madness, let's work on one file.
