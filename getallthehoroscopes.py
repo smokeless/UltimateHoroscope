@@ -12,7 +12,9 @@ this stuff with bins to pipes.
 #Pull all of the printer friendly files down
 #Trim off the advertising in them
 #Sort them by sign
-
+def writeToFile(fileName: str, line: str):
+    '''TODO Writes to a file, for now prints to test logic.'''
+    print(line)
 
 def getFreeWill():
     '''This pulls down the freewillastro archives to seed
@@ -38,7 +40,24 @@ def getFreeWill():
     moreSoup    = BeautifulSoup(req.text, 'html.parser')
     workingText = moreSoup.text
     cleanText   = ''
+    #logic should be like:
+    #parse in the line, if the line contains a sign
+    #continue to parse in lines until an asterix is
+    #hit. Don't add lines after the * until sign is
+    #hit.
+    appendLinesOn = False
+    signs = ['Aries', 'Taurus', 'Gemini',
+             'Cancer', 'Leo', 'Virgo',
+             'Libra', 'Scorpio', 'Sagittarius',
+             'Capricorn', 'Aquarius', 'Pisces']
+
     for line in workingText.splitlines():
+        if appendLinesOn == False:
+            for i in signs:
+                if signs in line:
+                    appendLinesOn = True
+
+
         if line == '*':
             pass
         else:
