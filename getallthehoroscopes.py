@@ -11,7 +11,7 @@ def writeToFile(fileName: str, txt):
     '''TODO Writes to a file, for now prints to test logic.'''
     print('*' * 10, 'writing to:', fileName )
     print('*' * 10, 'done writing:', fileName, '*' * 10)
-    with open(fileName, 'w') as myFile:
+    with open(fileName, 'a') as myFile:
         myFile.write(txt)
 
 def getFreeWill():
@@ -32,39 +32,39 @@ def getFreeWill():
         else:
             rawLinkArray.append(url2 + link['href'])
 
-
-    req         = requests.get(rawLinkArray[0])
-    moreSoup    = BeautifulSoup(req.text, 'html.parser')
-    workingText = moreSoup.text
+    for i in rawLinkArray:
+        req         = requests.get(i)
+        moreSoup    = BeautifulSoup(req.text, 'html.parser')
+        workingText = moreSoup.text
     #logic should be like:
     #parse in the line, if the line contains a sign
     #continue to parse in lines until an asterix is
     #hit. Don't add lines after the * until sign is
     #hit.
-    appendLinesOn = False
+        appendLinesOn = False
     #maybe refactor this out.
     #signs = ['Aries', 'Taurus', 'Gemini',
     #         'Cancer', 'Leo', 'Virgo',
     #         'Libra', 'Scorpio', 'Sagittarius',
     #         'Capricorn', 'Aquarius', 'Pisces']
 
-    currentSign = ''
-    signText = {'Aries':'', 'Taurus':'', 'Gemini':'',
-                'Cancer':'', 'Leo':'', 'Virgo':'',
-                'Libra':'', 'Scorpio':'', 'Sagittarius':'',
-                'Capricorn':'', 'Aquarius':'', 'Pisces':''}
-    for line in workingText.splitlines():
-        if appendLinesOn == False:
-            for i in signText:
-                if i in line:
-                    appendLinesOn = True
-                    currentSign = i
-        if appendLinesOn and '*' == line:
-            appendLinesOn = False
+        currentSign = ''
+        signText = {'Aries':'', 'Taurus':'', 'Gemini':'',
+                    'Cancer':'', 'Leo':'', 'Virgo':'',
+                    'Libra':'', 'Scorpio':'', 'Sagittarius':'',
+                    'Capricorn':'', 'Aquarius':'', 'Pisces':''}
+        for line in workingText.splitlines():
+            if appendLinesOn == False:
+                for i in signText:
+                    if i in line:
+                        appendLinesOn = True
+                        currentSign = i
+            if appendLinesOn and '*' == line:
+                appendLinesOn = False
 
-        if appendLinesOn:
-            signText[currentSign] += line
-            signText[currentSign] += '\n'
+            if appendLinesOn:
+                signText[currentSign] += line
+                signText[currentSign] += '\n'
 
         for key,value in signText.items():
             writeToFile(key, value)
