@@ -10,8 +10,9 @@ this stuff with bins to pipes.
 def writeToFile(fileName: str, txt):
     '''TODO Writes to a file, for now prints to test logic.'''
     print('*' * 10, 'writing to:', fileName )
-    print(txt)
     print('*' * 10, 'done writing:', fileName, '*' * 10)
+    with open(fileName, 'w') as myFile:
+        myFile.write(txt)
 
 def getFreeWill():
     '''This pulls down the freewillastro archives to seed
@@ -42,10 +43,10 @@ def getFreeWill():
     #hit.
     appendLinesOn = False
     #maybe refactor this out.
-    signs = ['Aries', 'Taurus', 'Gemini',
-             'Cancer', 'Leo', 'Virgo',
-             'Libra', 'Scorpio', 'Sagittarius',
-             'Capricorn', 'Aquarius', 'Pisces']
+    #signs = ['Aries', 'Taurus', 'Gemini',
+    #         'Cancer', 'Leo', 'Virgo',
+    #         'Libra', 'Scorpio', 'Sagittarius',
+    #         'Capricorn', 'Aquarius', 'Pisces']
 
     currentSign = ''
     signText = {'Aries':'', 'Taurus':'', 'Gemini':'',
@@ -54,7 +55,7 @@ def getFreeWill():
                 'Capricorn':'', 'Aquarius':'', 'Pisces':''}
     for line in workingText.splitlines():
         if appendLinesOn == False:
-            for i in signs:
+            for i in signText:
                 if i in line:
                     appendLinesOn = True
                     currentSign = i
