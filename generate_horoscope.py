@@ -10,14 +10,17 @@ def selectFile(zodiacSign: str)->str:
 def generateScope(seed: str)->str:
     text_model = markovify.Text(seed)
     lines = ''
-    for i in range(1): #how many lines we generate for this horoscope.
-        lines += text_model.make_short_sentence(140, tries=25)
+    for i in range(3): #how many lines we generate for this horoscope.
+        lines += text_model.make_sentence(max_overlap_ratio=100)
         lines += '\n'
     lines = lines.split('.')
     for i in range(0, (len(lines)-1)):
-        if 'Audio' in lines[i] or 'AUDIO' in lines[i]:
+        if 'Audio' in lines[i] or 'AUDIO' in lines[i] or 'audio' in lines[i]:
             del lines[i]
     lines = '.'.join(lines)
+    lines = lines.strip()
+    if len(lines) == 0:
+        generateScope(seed)
     return lines
 
 
