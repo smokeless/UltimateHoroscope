@@ -7,9 +7,11 @@ dl and parse everything by hand. Nor do I want to DL/parse
 this stuff with bins to pipes.
 '''
 
-def writeToFile(fileName: str, line: str):
+def writeToFile(fileName: str, txt):
     '''TODO Writes to a file, for now prints to test logic.'''
-    print(line)
+    print('*' * 10, 'writing to:', fileName )
+    print(txt)
+    print('*' * 10, 'done writing:', fileName, '*' * 10)
 
 def getFreeWill():
     '''This pulls down the freewillastro archives to seed
@@ -33,20 +35,23 @@ def getFreeWill():
     req         = requests.get(rawLinkArray[0])
     moreSoup    = BeautifulSoup(req.text, 'html.parser')
     workingText = moreSoup.text
-    cleanText   = ''
     #logic should be like:
     #parse in the line, if the line contains a sign
     #continue to parse in lines until an asterix is
     #hit. Don't add lines after the * until sign is
     #hit.
     appendLinesOn = False
+    #maybe refactor this out.
     signs = ['Aries', 'Taurus', 'Gemini',
              'Cancer', 'Leo', 'Virgo',
              'Libra', 'Scorpio', 'Sagittarius',
              'Capricorn', 'Aquarius', 'Pisces']
 
     currentSign = ''
-
+    signText = {'Aries':'', 'Taurus':'', 'Gemini':'',
+                'Cancer':'', 'Leo':'', 'Virgo':'',
+                'Libra':'', 'Scorpio':'', 'Sagittarius':'',
+                'Capricorn':'', 'Aquarius':'', 'Pisces':''}
     for line in workingText.splitlines():
         if appendLinesOn == False:
             for i in signs:
@@ -57,9 +62,14 @@ def getFreeWill():
             appendLinesOn = False
 
         if appendLinesOn:
-            cleanText += line
-            cleanText += '\n'
+            signText[currentSign] += line
+            signText[currentSign] += '\n'
 
-    print(cleanText)
+        for key,value in signText.items():
+            writeToFile(key, value)
+
+
+
+
 
 getFreeWill()
