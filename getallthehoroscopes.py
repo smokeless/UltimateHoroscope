@@ -1,7 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
-
-url = 'https://www.freewillastrology.com/horoscopes/horo-archive.html'
+'''
+This isn't really part of the project. 
+But if I use other sites as well I don't want to
+dl and parse everything by hand. Nor do I want to DL/parse
+this stuff with bins to pipes.
+'''
 
 
 #TODO:
@@ -10,25 +14,37 @@ url = 'https://www.freewillastrology.com/horoscopes/horo-archive.html'
 #Sort them by sign
 
 
+def getFreeWill():
+    '''This pulls down the freewillastro archives to seed
+       the Markov.
+    '''
+    url  = 'https://www.freewillastrology.com/horoscopes/horo-archive.html'
+    url2 = 'https://www.freewillastrology.com/horoscopes/'  # links come from first url
+                                                            # this is where they need to
+                                                            # be appended.
+    r            = requests.get(url)
+    soup         = BeautifulSoup(r.text,'html.parser')
+    file         = 'free_will_astro.txt'
+    rawLinkArray = []
 
-r = requests.get(url)
-soup = BeautifulSoup(r.text,'html.parser')
-file = 'allTheThings'
-rawLinkArray = []
-url2 = 'https://www.freewillastrology.com/horoscopes/' #links come from first url
-                                                       #this is where they need to
-                                                       #be appended. Probably a
-                                                       #better way to do this.
+    for link in soup.find_all('a', href=True):
+        if '..' in link['href'] or 'email' in link['href'] or 'p' not in link['href']:
+            pass
+        else:
+            rawLinkArray.append(url2 + link['href'])
 
-for link in soup.find_all('a', href=True):
-    if '..' in link['href'] or 'email' in link['href'] or 'p' not in link['href']:
-        pass
-    else:
-        rawLinkArray.append(url2 + link['href'])
-        print(url2 + link['href'])
 
-#testing
-req = requests.get(rawLinkArray[0])
-moreSoup = BeautifulSoup(req.text, 'html.parser')
-print(moreSoup.text)
+    req         = requests.get(rawLinkArray[0])
+    moreSoup    = BeautifulSoup(req.text, 'html.parser')
+    workingText = moreSoup.text
+    cleanText   = ''
+    for line in workingText.splitlines():
+        if line == '*':
+            pass
+        else:
+            cleanText += '\n'
+            cleanText += line
+    print(cleanText)
 
+
+getFreeWill()
